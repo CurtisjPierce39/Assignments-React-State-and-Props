@@ -1,7 +1,7 @@
 import '/src/movielist.css';
 import React, { useState } from 'react';
 
-function MovieList() {
+function MovieList({}) {
     const [movies, setMovies] = useState([
         {
             id: 1,
@@ -40,8 +40,18 @@ function MovieList() {
     };
 
     const handleRemoveMovie = (id) => {
-        setMovies(movies.filter((movie) => movie-id !== id));
+        setMovies(movies.filter((movie) => movie.id !== id));
     };
+
+    const [showGenre, setShowGenre] = useState(null);
+
+    const handleGenreClick = (genre) => {
+    setShowGenre(showGenre === genre ? null : genre);
+    };
+
+    const filteredMovies = showGenre
+    ? movies.filter((movie) => movie.genre === showGenre)
+    : movies;
 
     return (
         <section>
@@ -52,13 +62,30 @@ function MovieList() {
                         <li key={movie.id}>
                             <strong>{movie.title}</strong>
                             <p>{movie.genre}</p>
+                            <button onClick={() => handleRemoveMovie(movie.id)}>Delete</button>
                             {showSummary[movie.id] && <p>{movie.summary}</p>}
                             <button onClick={() => toggleSummary(movie.id)}>
                                 {showSummary[movie.id] ? 'Hide Summary' : 'Show Summary'}
                             </button>
-                            <button onClick={() => handleRemoveMovie(movie.id)}>Delete</button>
                         </li>
                     ))}
+                </ul>
+                <button onClick={() => setShowGenre(null)}>Show All</button>
+                    {Object.keys(movies.reduce((genres, movie) => {
+                    genres[movie.genre] = true;
+                    return genres;
+                    }, {})).map((genre) => (
+                <button key={genre} onClick={() => handleGenreClick(genre)}>
+                    {genre}
+                </button>
+                ))}
+
+                <ul>
+                    {filteredMovies.map((movie) => (
+                    <li key={movie.id}>
+                    {movie.title} ({movie.genre})
+                    </li>
+            ))}
                 </ul>
             </div>
         </section>

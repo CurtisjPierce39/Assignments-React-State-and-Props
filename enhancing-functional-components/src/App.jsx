@@ -1,5 +1,6 @@
 import MovieList from "./movielist"
 
+
 const App = () => {
 
   return (
